@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synergychat-crawler
+  labels: 
+    app: synergychat-crawler # used to select the pods that this deployment manages
+spec:
+  replicas: 1
+  selector: # selector tells the Deployment wich Pods it manages. Those whose metadata.labels include app: synergychat-web (we make this be the case below in the 'template' section)
+    matchLabels: # labels are how Kubernetes knows which pods belong to which deployments
+      app: synergychat-crawler # must match metadata/labels/app above
+  template:
+    metadata:
+      labels:
+        app: synergychat-crawler # sets labels on the Pods created by the Deployment
+    spec:
+      containers:
+       - name: synergychat-crawler
+         image: bootdotdev/synergychat-crawler:latest
+         envFrom:
+          - configMapRef:
+              name: synergychat-crawler-configmap
+        
